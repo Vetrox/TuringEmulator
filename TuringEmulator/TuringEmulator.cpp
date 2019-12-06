@@ -24,18 +24,6 @@ struct Transition {
 	uch instruction;
 };
 
-uch parsec(char c) {
-	if (c == '_') return 0;
-	else if (c == '1') return 1;
-	else if (c == '5') return 2;
-}
-
-char parseback(uch c) {
-	if (c == 0) return '_';
-	else if (c == 1) return '1';
-	else if (c == 2) return '5';
-}
-
 void daten_einlesen(vector<Transition>& transitions, vector<uch>& band, int argc, char** argv) {
 	vector<string> data;
 	string line;
@@ -64,16 +52,16 @@ void daten_einlesen(vector<Transition>& transitions, vector<uch>& band, int argc
 	ende = data[1][5];
 	string b = data[2].substr(5);
 	for (char c : b) {
-		band.push_back(parseC(c));
+		band.push_back(c);
 	}
 
 	for (uch i = 3; i < data.size(); i++) {
 		string d = data[i];
 		Transition t;
 		t.zustand = d[0];
-		t.element = parseC(d[2]);
+		t.element = d[2];
 		t.zustand_neu = d[7];
-		t.push_element = parseC(d[9]);
+		t.push_element = d[9];
 		t.instruction = d[11];
 		transitions.push_back(t);
 	}
@@ -81,11 +69,11 @@ void daten_einlesen(vector<Transition>& transitions, vector<uch>& band, int argc
 
 lli read(vector<uch>& band, const lli& head, lli& vectorMid) {
 	if (head + vectorMid < 0) {
-		band.insert(band.begin(), parseC('_'));
+		band.insert(band.begin(), '_');
 		vectorMid++;
 	}
 	else if (head + vectorMid >= band.size()) {
-		band.push_back(parseC('_'));
+		band.push_back('_');
 	}
 	return vectorMid + head;
 }
@@ -104,12 +92,12 @@ int main(int argc, char** argv) {
 	cout << "Bedingungen" << endl;
 	cout << "Start = " << start << " Ende = " << ende << endl;
 	for (Transition t : transitions)
-		cout << t.zustand << " " << parseBack(t.element) << " " << t.zustand_neu << " " << parseBack(t.push_element) << " " << t.instruction << endl;
+		cout << t.zustand << " " << t.element << " " << t.zustand_neu << " " << t.push_element << " " << t.instruction << endl;
 
 
 	cout << "Band: ";
 	for (uch c : band)
-		cout << parseBack(c) << " ";
+		cout << c << " ";
 	cout << endl;
 
 
@@ -145,12 +133,12 @@ int main(int argc, char** argv) {
 
 	lli anz_zeichen = 0;
 	for (uch c : band)
-		if (c != 0) anz_zeichen++;
+		if (c != '_') anz_zeichen++;
 
 
 	cout << "Halt-Status nach " << elapsed_secs << "s erreicht." << counter << " Operationen, " << anz_zeichen << " Zeichen auf dem Band." << endl;
 	for (uch c : band) {
-		cout << parseBack(c) << " ";
+		cout << c << " ";
 	}
 	cout << endl;
 
