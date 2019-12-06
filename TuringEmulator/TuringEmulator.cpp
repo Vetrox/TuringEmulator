@@ -67,7 +67,7 @@ void daten_einlesen(vector<Transition>& transitions, vector<uch>& band, int argc
 	}
 }
 
-lli read(vector<uch>& band, const lli& head, lli& vectorMid) {
+lli read(vector<uch>& band, const lli& head, lli& vectorMid, uch zustand) {
 	if (head + vectorMid < 0) {
 		band.insert(band.begin(), '_');
 		vectorMid++;
@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 	cout << "Bedingungen" << endl;
 	cout << "Start = " << start << " Ende = " << ende << endl;
 	for (Transition t : transitions)
-		cout << t.zustand << " " << t.element << " " << t.zustand_neu << " " << t.push_element << " " << t.instruction << endl;
+		cout << t.zustand << " " << t.element << " -> " << t.zustand_neu << " " << t.push_element << " " << t.instruction << endl;
 
 
 	cout << "Band: ";
@@ -106,13 +106,22 @@ int main(int argc, char** argv) {
 	lli vectorMid = 0;
 	lli counter = 0;
 	uch zustand = start;
+
+	lli prev_head = head;
+	lli prev_prev_head = prev_head;
+	uch prev_zustand = start;
+	bool right = true;
+
+
 	//time before calculation
 	chrono::steady_clock::time_point begin = chrono::steady_clock::now();
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
 	//the turing simulation
 	while (zustand != ende) {
-		uch& container = band[read(band, head, vectorMid)];
+		uch& container = band[read(band, head, vectorMid, zustand)];
+		
+		
 		for (Transition trans : transitions) {
 			if (trans.zustand == zustand and trans.element == container) {
 				zustand = trans.zustand_neu;
@@ -121,6 +130,19 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
+
+		if (head == prev_prev_head) {
+			if (right == true) {
+				cout << "	" << prev_zustand << endl;
+			}
+			else {
+				cout << prev_zustand << endl;
+			}
+			right = !right;
+		}
+		prev_prev_head = prev_head;
+		prev_head = head;
+		prev_zustand = zustand;
 		counter++;
 
 		if (chrono::duration_cast<chrono::seconds> (chrono::steady_clock::now() - end).count() > 10) {
