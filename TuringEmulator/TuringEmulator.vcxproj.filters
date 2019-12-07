@@ -20,9 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.tm">
-      <Filter>Ressourcendateien</Filter>
-    </None>
     <None Include="..\x64\Release\projekt.tm">
       <Filter>Ressourcendateien</Filter>
     </None>

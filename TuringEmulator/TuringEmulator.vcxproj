@@ -156,7 +156,6 @@
   <ItemGroup>
     <None Include="..\x64\Release\5state.tm" />
     <None Include="..\x64\Release\projekt.tm" />
-    <None Include="test.tm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
