@@ -23,5 +23,11 @@
     <None Include="test.tm">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\x64\Release\projekt.tm">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\x64\Release\5state.tm">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
 </Project>
