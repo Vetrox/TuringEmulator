@@ -153,12 +153,6 @@
   <ItemGroup>
     <ClCompile Include="TuringEmulator.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\Desktop\5state.tm" />
-    <None Include="..\..\..\..\Desktop\projekt.tm" />
-    <None Include="..\x64\Release\5state.tm" />
-    <None Include="..\x64\Release\projekt.tm" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

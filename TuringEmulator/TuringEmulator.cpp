@@ -3,8 +3,10 @@
 #include <fstream>
 #include <string>
 #include <chrono>
-#include <unordered_map>
+#include <map>
 #include <tuple>
+#include <deque>
+#include <algorithm>
 
 
 typedef unsigned char uch;
@@ -12,10 +14,10 @@ typedef long long int lli;
 using namespace std;
 
 uch start, ende;
-vector<uch> band;
 
 
-void daten_einlesen(unordered_map<uch, unordered_map<uch, tuple<uch, uch, uch>>>& transitions, vector<uch>& band, int argc, char** argv) {
+
+void daten_einlesen(map<uch, map<uch, tuple<uch, uch, uch>>>& transitions, deque<uch>& band, const int& argc, char** argv) {
 	string line, path;
 	if (argc >= 2) {
 		path = string(argv[1]);
@@ -43,11 +45,12 @@ void daten_einlesen(unordered_map<uch, unordered_map<uch, tuple<uch, uch, uch>>>
 		transitions[data[i][0]][data[i][2]] = tuple<uch, uch, uch>(data[i][7], data[i][9], data[i][11]);
 }
 
-uch& read(vector<uch>& band, const lli& head, lli& vectorMid, uch zustand) {
-	if (head + vectorMid < 0) {
-		band.insert(band.begin(), '_');
+uch& read(deque<uch>& band, const lli& head, lli& vectorMid, uch zustand) {
+	lli s = head + vectorMid;
+	if (s < 0) {
+		band.push_front('_');
 		vectorMid++;
-	} else if (head + vectorMid >= band.size()) 
+	} else if (s >= band.size())
 		band.push_back('_');
 	return band[vectorMid + head];
 }
@@ -59,7 +62,8 @@ void parseInstruction(const uch& instruction, lli& head) {
 
 int main(int argc, char** argv) {
 	//the setup
-	unordered_map<uch, unordered_map<uch, tuple<uch, uch, uch>>> transitions;
+	map<uch, map<uch, tuple<uch, uch, uch>>> transitions;
+	deque<uch> band;
 	daten_einlesen(transitions, band, argc, argv);
 
 	cout << "Bedingungen" << endl;
@@ -70,18 +74,17 @@ int main(int argc, char** argv) {
 	uch zustand = start;
 
 	//time before calculation
-	auto begin = chrono::steady_clock::now();
+	const auto begin = chrono::steady_clock::now();
 
 	//the turing simulation
 	while (zustand != ende) {
 		uch& container = read(band, head, vectorMid, zustand);
 		auto c = transitions[zustand][container];
-		zustand = get<0>(c);
-		container = get<1>(c);
+		zustand = get<0>(c), container = get<1>(c);
 		parseInstruction(get<2>(c), head);
 		counter++;
 	}
-	auto end = chrono::steady_clock::now();
+	const auto end = chrono::steady_clock::now();
 
 
 	//berechnungen machen
@@ -93,9 +96,7 @@ int main(int argc, char** argv) {
 
 	//ausgabe an den user
 	cout << "Halt-Status nach " << elapsed_ms << "ms erreicht." << counter << " Operationen, " << anz_zeichen << " Zeichen auf dem Band." << endl;
-	for (uch c : band) {
-		cout << c << " ";
-	}
+	for_each(band.begin(), band.end(), [](uch c) {cout << c << " "; });
 	cout << endl;
 
 	system("pause");
